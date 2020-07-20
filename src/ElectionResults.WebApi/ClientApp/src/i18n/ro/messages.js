@@ -2,6 +2,7 @@ import { termsAndConditions } from "./termsAndConditions";
 import { privacyPolicy } from "./privacyPolicy";
 import { aboutProject } from "./aboutProject";
 import { aboutUs } from "./aboutUs";
+import { adminPanel } from "./adminPanel";
 
 const baseMessages = {
   "about_the_project": "DESPRE PROIECT",
@@ -54,4 +55,5 @@ export const messages = {
   ...privacyPolicy,
   ...aboutProject,
   ...aboutUs,
+  ...adminPanel,
 }
