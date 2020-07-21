@@ -10,6 +10,7 @@ import {VoteMonitoring} from "./components/VoteMonitoring";
 import {ChartContainer} from "./components/CandidatesChart";
 import {ElectionChart} from "./components/Chart";
 import Login from "./components/Authentication/Login";
+import {AdminPage} from "./components/AdminPage/AdminPage";
 
 export default class App extends Component {
     static displayName = App.name;
@@ -34,6 +35,7 @@ export default class App extends Component {
                         <Route path={`${baseNonWidgetPath}/login`}>
                           <Login />
                         </Route>
+                        <Route path={`${baseNonWidgetPath}/admin`} component={AdminPage}/>
                     </Layout>
                 </Route>
                 <Route path={baseWidgetPath}>

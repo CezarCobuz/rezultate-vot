@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from "react-i18next";
 import { Label, Input } from 'reactstrap';
-import { getElectionConfigUrl } from '../services/apiService';
-
+import { getElectionConfigUrl } from '../../services/apiService';
 
 const AdminPanel = () => {
   // const API_URL = '/api/settings/election-config';
@@ -60,78 +60,84 @@ const AdminPanel = () => {
     setConfig({ ...config, Candidates: candidatesCopy });
   }
 
+  const { t } = useTranslation();
+
   return (
     <div>
       <form>
-        {config.Files.map((file, index) => {
-          return (
-            <div key={index} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-              <div className="form-group">
-                <Label for="URL">BEC Url</Label>
-                <Input type="text" name="URL" placeholder="BEC Url" bsSize="sm"
-                  value={file.URL} onChange={(event) => handleFileChange(event, index)} />
+        <div>
+          {config.Files.map((file, index) => {
+            return (
+              <div key={index} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+                <div className="form-group">
+                  <Label for="URL">{t("bec_url")}</Label>
+                  <Input type="text" name="URL" placeholder={t("bec_url")} bsSize="sm"
+                    value={file.URL} onChange={(event) => handleFileChange(event, index)} />
+                </div>
+                <div className="form-group">
+                  <Label for="ResultsType">{t("results_type")}</Label>
+                  <Input type="select" name="ResultsType" bsSize="sm"
+                    value={file.ResultsType} onChange={(event) => handleFileChange(event, index)}>
+                    <option value={0}>{t("provisional")}</option>
+                    <option value={1}>{t("partial")}</option>
+                    <option value={2}>{t("final")}</option>
+                    <option value={3}>{t("turnout")}</option>
+                    <option value={4}>{t("vote_monitoring")}</option>
+                  </Input>
+                </div>
+                <div className="form-group">
+                  <Label for="ResultsLocation">{t("location")}</Label>
+                  <Input type="select" name="ResultsLocation" bsSize="sm"
+                    value={file.ResultsLocation} onChange={(event) => handleFileChange(event, index)}>
+                    <option value={0}>{t("romania")}</option>
+                    <option value={1}>{t("diaspora")}</option>
+                    <option value={2}>{t("all")}</option>
+                  </Input>
+                </div>
+                <div className="form-group">
+                  <Label for="Active" check className="position-relative">
+                    <Input type="checkbox" name="Active" value={file.Active}
+                      style={{ width: '1em', height: '1em' }} />
+                    {t("is_active")}
+                  </Label>
+                </div>
+                <div className="form-group">
+                  <button type="button" className="btn btn-sm btn-secondary" onClick={() => removeFile(index)}>{t("remove")}</button>
+                </div>
               </div>
-              <div className="form-group">
-                <Label for="ResultsType">Result type</Label>
-                <Input type="select" name="ResultsType" bsSize="sm"
-                  value={file.ResultsType} onChange={(event) => handleFileChange(event, index)}>
-                  <option value={0}>Provisional</option>
-                  <option value={1}>Partial</option>
-                  <option value={2}>Final</option>
-                  <option value={3}>Turnout</option>
-                  <option value={4}>VoteMonitoring</option>
-                </Input>
+            )
+          })}
+          <button type="button" className="btn btn-sm btn-secondary mb-3" onClick={addFile}>{t("add_new_url")}</button>
+        </div>
+        <div>
+          {config.Candidates.map((candidate, index) => {
+            return (
+              <div key={index} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+                <div className="form-group">
+                  <Label for="Name">{t("name")}</Label>
+                  <Input type="text" name="Name" placeholder={t("name")} bsSize="sm"
+                    value={candidate.Name} onChange={(event) => handleCandidateChange(event, index)} />
+                </div>
+                <div className="form-group">
+                  <Label for="ImageUrl">{t("image_url")}</Label>
+                  <Input type="text" name="ImageUrl" placeholder={t("image_url")} bsSize="sm"
+                    value={candidate.ImageUrl} onChange={(event) => handleCandidateChange(event, index)} />
+                </div>
+                <div className="form-group">
+                  <Label for="CsvId">{t("csv_id")}</Label>
+                  <Input type="text" name="CsvId" placeholder={t("csv_id")} bsSize="sm"
+                    value={candidate.CsvId} onChange={(event) => handleCandidateChange(event, index)} />
+                </div>
+                <div className="form-group">
+                  <button type="button" className="btn btn-sm btn-secondary" onClick={() => removeCandidate(index)}>{t("remove")}</button>
+                </div>
               </div>
-              <div className="form-group">
-                <Label for="ResultsLocation">Location</Label>
-                <Input type="select" name="ResultsLocation" bsSize="sm"
-                  value={file.ResultsLocation} onChange={(event) => handleFileChange(event, index)}>
-                  <option value={0}>Romania</option>
-                  <option value={1}>Diaspora</option>
-                  <option value={2}>All</option>
-                </Input>
-              </div>
-              <div className="form-group">
-                <Label for="Active" check>
-                  <Input className="mt-0" type="checkbox" name="Active" value={file.Active}
-                    style={{ width: '1em', height: '1em' }} />
-                  Is active
-                </Label>
-              </div>
-              <div className="form-group">
-                <button type="button" className="btn btn-sm btn-secondary" onClick={() => removeFile(index)}>Remove</button>
-              </div>
-            </div>
-          )
-        })}
-        <button type="button" className="btn btn-sm btn-secondary mb-3" onClick={addFile}>Add new URL</button>
-        {config.Candidates.map((candidate, index) => {
-          return (
-            <div key={index} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-              <div className="form-group">
-                <Label for="Name">Name</Label>
-                <Input type="text" name="Name" placeholder="Name" bsSize="sm"
-                  value={candidate.Name} onChange={(event) => handleCandidateChange(event, index)} />
-              </div>
-              <div className="form-group">
-                <Label for="ImageUrl">Image URL</Label>
-                <Input type="text" name="ImageUrl" placeholder="Image URL" bsSize="sm"
-                  value={candidate.ImageUrl} onChange={(event) => handleCandidateChange(event, index)} />
-              </div>
-              <div className="form-group">
-                <Label for="CsvId">CSV Id</Label>
-                <Input type="text" name="CsvId" placeholder="CSV Id" bsSize="sm"
-                  value={candidate.CsvId} onChange={(event) => handleCandidateChange(event, index)} />
-              </div>
-              <div className="form-group">
-                <button type="button" className="btn btn-sm btn-secondary" onClick={() => removeCandidate(index)}>Remove</button>
-              </div>
-            </div>
-          )
-        })}
-        <button type="button" className="btn btn-sm btn-secondary mb-3" onClick={addCandidate}>Add new candidate</button>
+            )
+          })}
+          <button type="button" className="btn btn-sm btn-secondary mb-3" onClick={addCandidate}>{t("add_new_candidate")}</button>
+        </div>
       </form>
-      <button type="button" className="btn btn-sm btn-success mb-3" onClick={save}>Save</button>
+      <button type="button" className="btn btn-sm btn-success mb-3" onClick={save}>{t("save")}</button>
     </div>
   )
 }
