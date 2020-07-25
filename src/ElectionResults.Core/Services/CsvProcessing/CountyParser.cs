@@ -49,7 +49,7 @@ namespace ElectionResults.Core.Services.CsvProcessing
                     }
                 }
 
-                return Result.Ok(electionResultsData);
+                return Result.Success(electionResultsData);
             }
             catch (Exception e)
             {

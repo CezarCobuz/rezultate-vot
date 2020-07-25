@@ -49,7 +49,7 @@ namespace ElectionResults.Core.Infrastructure
             };
             var response = await _amazonSettingsClient.PutParameterAsync(putParameterRequest);
             if (response.HttpStatusCode == HttpStatusCode.OK)
-                return Result.Ok();
+                return Result.Success();
             return Result.Failure("Couldn't update the job timer");
         }
 
@@ -61,7 +61,7 @@ namespace ElectionResults.Core.Infrastructure
             };
             var response = await _amazonSettingsClient.GetParameterAsync(getParameterRequest);
             if (response.HttpStatusCode == HttpStatusCode.OK)
-                return Result.Ok(int.Parse(response.Parameter.Value));
+                return Result.Success(int.Parse(response.Parameter.Value));
             return Result.Failure<int>("Couldn't retrieve the job timer");
         }
 
@@ -76,7 +76,7 @@ namespace ElectionResults.Core.Infrastructure
             };
             var response = await _amazonSettingsClient.PutParameterAsync(putParameterRequest);
             if (response.HttpStatusCode == HttpStatusCode.OK)
-                return Result.Ok();
+                return Result.Success();
             return Result.Failure("Couldn't update the job timer");
         }
 
@@ -88,7 +88,7 @@ namespace ElectionResults.Core.Infrastructure
             };
             var response = await _amazonSettingsClient.GetParameterAsync(getParameterRequest);
             if (response.HttpStatusCode == HttpStatusCode.OK)
-                return Result.Ok(response.Parameter.Value);
+                return Result.Success(response.Parameter.Value);
             return Result.Failure<string>("Couldn't update the job timer");
         }
 
@@ -102,7 +102,7 @@ namespace ElectionResults.Core.Infrastructure
             var foundElection = electionsConfig.SingleOrDefault(e => e.ElectionId == electionId);
             if (foundElection == null)
                 return Result.Failure<Election>($"Could not find election with id {electionId}");
-            return Result.Ok(foundElection);
+            return Result.Success(foundElection);
         }
     }
 }

@@ -24,7 +24,7 @@ namespace ElectionResults.Core.Services.CsvProcessing
                     await csvParser.Parse(electionResults, csvContent, file);
                 }
 
-                return Result.Ok(electionResults);
+                return Result.Success(electionResults);
             }
             catch (Exception e)
             {

@@ -73,7 +73,7 @@ namespace ElectionResults.Tests.BlobProcessorTests
         private void MapStatisticsAggregatorToSuccessfulResult()
         {
             _statisticsAggregator.RetrieveElectionData("", new ElectionResultsFile())
-                .ReturnsForAnyArgs(Task.FromResult(Result.Ok(new ElectionResultsData())));
+                .ReturnsForAnyArgs(Task.FromResult(Result.Success(new ElectionResultsData())));
         }
     }
 }

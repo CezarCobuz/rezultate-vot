@@ -18,7 +18,7 @@ namespace ElectionResults.Tests.CandidatesResultsParserTests
         public async Task not_return_null_list_of_candidates()
         {
             var source = Substitute.For<IElectionConfigurationSource>();
-            source.GetElectionById("").ReturnsForAnyArgs(e => Result.Ok(new Election
+            source.GetElectionById("").ReturnsForAnyArgs(e => Result.Success(new Election
             {
                 Candidates = new List<CandidateConfig>()
             }));

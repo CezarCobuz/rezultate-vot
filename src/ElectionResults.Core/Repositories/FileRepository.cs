@@ -30,7 +30,7 @@ namespace ElectionResults.Core.Repositories
                 await fileTransferUtility.UploadAsync(uploadRequest);
             }
 
-            return Result.Ok();
+            return Result.Success();
         }
     }
 

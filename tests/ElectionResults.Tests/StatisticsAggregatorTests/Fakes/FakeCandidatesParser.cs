@@ -14,7 +14,7 @@ namespace ElectionResults.Tests.StatisticsAggregatorTests.Fakes
         {
             WasInvoked = true;
             electionResultsData.Candidates = new List<CandidateConfig>();
-            return Task.FromResult(Result.Ok(electionResultsData));
+            return Task.FromResult(Result.Success(electionResultsData));
         }
 
         public bool WasInvoked { get; set; }

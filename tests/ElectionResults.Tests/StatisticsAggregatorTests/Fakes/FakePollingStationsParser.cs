@@ -10,7 +10,7 @@ namespace ElectionResults.Tests.StatisticsAggregatorTests.Fakes
         public Task<Result<ElectionResultsData>> Parse(ElectionResultsData electionResultsData, string csvContent,
             ElectionResultsFile file)
         {
-            return Task.FromResult(Result.Ok(electionResultsData));
+            return Task.FromResult(Result.Success(electionResultsData));
         }
     }
 }

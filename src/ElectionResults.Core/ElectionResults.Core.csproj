@@ -1,16 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Amazon.Lambda.AspNetCoreServer" Version="5.1.1" />
-    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.3.106.2" />
+    <PackageReference Include="Amazon.Lambda.AspNetCoreServer" Version="5.1.3" />
+    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.3.106.36" />
     <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.3.101" />
-    <PackageReference Include="AWSSDK.S3" Version="3.3.110.68" />
-    <PackageReference Include="AWSSDK.SimpleSystemsManagement" Version="3.3.123.3" />
-    <PackageReference Include="CSharpFunctionalExtensions" Version="2.7.1" />
+    <PackageReference Include="AWSSDK.S3" Version="3.3.111.30" />
+    <PackageReference Include="AWSSDK.SimpleSystemsManagement" Version="3.3.126.16" />
+    <PackageReference Include="CSharpFunctionalExtensions" Version="2.11.1" />
     <PackageReference Include="CsvHelper" Version="15.0.5" />
     <PackageReference Include="LazyCache" Version="2.0.4" />
     <PackageReference Include="LazyCache.AspNetCore" Version="2.0.4" />

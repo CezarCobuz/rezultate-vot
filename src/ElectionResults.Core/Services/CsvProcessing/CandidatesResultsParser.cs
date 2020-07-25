@@ -48,7 +48,7 @@ namespace ElectionResults.Core.Services.CsvProcessing
             var sumOfVotes = electionResultsData.Candidates.Sum(c => c.Votes);
             electionResultsData.Candidates = StatisticsAggregator.CalculatePercentagesForCandidates(electionResultsData.Candidates, sumOfVotes);
 
-            return Result.Ok(electionResultsData);
+            return Result.Success(electionResultsData);
         }
 
 

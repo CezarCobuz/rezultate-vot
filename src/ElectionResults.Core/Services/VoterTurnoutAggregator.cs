@@ -18,7 +18,7 @@ namespace ElectionResults.Core.Services
                 var httpClient = new HttpClient();
                 var voterTurnout = await GetVoterTurnoutByUrl(httpClient, turnoutJson.URL);
                 voterTurnout.ElectionId = turnoutJson.ElectionId;
-                return Result.Ok(voterTurnout);
+                return Result.Success(voterTurnout);
             }
             catch (Exception e)
             {
@@ -60,7 +60,7 @@ namespace ElectionResults.Core.Services
             var httpClient = new HttpClient();
             var json = await httpClient.GetStringAsync(monitoringJson.URL);
             var response = JsonConvert.DeserializeObject<List<MonitoringInfo>>(json);
-            return Result.Ok(new VoteMonitoringStats
+            return Result.Success(new VoteMonitoringStats
             {
                 Statistics = response,
                 ElectionId = monitoringJson.ElectionId
