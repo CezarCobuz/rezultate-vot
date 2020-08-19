@@ -51,7 +51,7 @@ namespace ElectionResults.Core.Services
             if (result.IsSuccess)
             {
                 var voteMonitoringStats = JsonConvert.DeserializeObject<VoteMonitoringStats>(result.Value.StatisticsJson);
-                return Result.Ok(voteMonitoringStats);
+                return Result.Success(voteMonitoringStats);
             }
             return Result.Failure<VoteMonitoringStats>("Failed to retrieve vote monitoring stats");
         }
@@ -62,7 +62,7 @@ namespace ElectionResults.Core.Services
             if (result.IsSuccess)
             {
                 var voterTurnout = JsonConvert.DeserializeObject<VoterTurnout>(result.Value.StatisticsJson);
-                return Result.Ok(voterTurnout);
+                return Result.Success(voterTurnout);
             }
 
             return Result.Failure<VoterTurnout>("Failed to retrieve voter turnout");
@@ -78,9 +78,9 @@ namespace ElectionResults.Core.Services
                     if (data.Candidates == null)
                     {
                         Log.LogWarning($"No data found for {resultsQuery}");
-                        return Result.Ok(CreateLiveResultsResponse(data));
+                        return Result.Success(CreateLiveResultsResponse(data));
                     }
-                    return Result.Ok(CreateLiveResultsResponse(data));
+                    return Result.Success(CreateLiveResultsResponse(data));
                 }
 
                 var response = await _resultsRepository.Get(resultsQuery.ElectionId, resultsQuery.Source, FileType.Results.ConvertEnumToString());
@@ -88,12 +88,12 @@ namespace ElectionResults.Core.Services
                 {
                     var electionResultsData = JsonConvert.DeserializeObject<ElectionResultsData>(response.Value.StatisticsJson);
                     if (string.IsNullOrWhiteSpace(resultsQuery.County))
-                        return Result.Ok(CreateLiveResultsResponse(electionResultsData));
+                        return Result.Success(CreateLiveResultsResponse(electionResultsData));
                     foreach (var candidate in electionResultsData.Candidates)
                     {
                         candidate.Votes = candidate.Counties[resultsQuery.County];
                     }
-                    return Result.Ok(CreateLiveResultsResponse(electionResultsData));
+                    return Result.Success(CreateLiveResultsResponse(electionResultsData));
                 }
             }
             catch (Exception e)
@@ -101,7 +101,7 @@ namespace ElectionResults.Core.Services
                 Console.WriteLine(e);
                 throw;
             }
-            return Result.Ok(new LiveResultsResponse());
+            return Result.Success(new LiveResultsResponse());
         }
 
         public async Task<Result<VoteCountStats>> GetVoteCountStatistics(string electionId)
@@ -119,7 +119,7 @@ namespace ElectionResults.Core.Services
                     Percentage = 100,
                     TotalCountedVotes = 9216515
                 };
-                return Result.Ok(stats);
+                return Result.Success(stats);
             }
             else
             {
@@ -128,7 +128,7 @@ namespace ElectionResults.Core.Services
                     Percentage = 100,
                     TotalCountedVotes = 10031762
                 };
-                return Result.Ok(stats);
+                return Result.Success(stats);
             }
             var result = await GetElectionResults(new ResultsQuery
             {
@@ -154,7 +154,7 @@ namespace ElectionResults.Core.Services
                 return Result.Failure<VoteCountStats>("Vote turnout is 0");
             }
 
-            return Result.Ok(voteCountStats);
+            return Result.Success(voteCountStats);
 
         }
 

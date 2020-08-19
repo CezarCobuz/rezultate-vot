@@ -19,7 +19,6 @@ using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -30,9 +29,9 @@ namespace ElectionResults.WebApi
 {
     public class Startup
     {
-        private readonly IHostingEnvironment _environment;
+        private readonly IWebHostEnvironment _environment;
 
-        public Startup(IConfiguration configuration, IHostingEnvironment environment)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             _environment = environment;
             Configuration = configuration;
@@ -44,7 +43,7 @@ namespace ElectionResults.WebApi
         {
             services.Configure<AppConfig>(options => Configuration.GetSection("settings").Bind(options));
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
             services.AddTransient<IResultsRepository, ResultsRepository>();
             services.AddTransient<IResultsAggregator, ResultsAggregator>();
             services.AddTransient<ICsvDownloaderJob, CsvDownloaderJob>();
@@ -99,6 +98,7 @@ namespace ElectionResults.WebApi
                     Region = RegionEndpoint.EUCentral1
                 });
             }
+            
             services.AddLazyCache();
             services.AddSingleton<IHostedService, ScheduleTask>();
             services.AddSpaStaticFiles(configuration =>
@@ -127,7 +127,7 @@ namespace ElectionResults.WebApi
 
         private bool InDocker { get { return Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true"; } }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             app.UseHsts();
             Log.SetLogger(loggerFactory.CreateLogger<Startup>());
@@ -156,11 +156,10 @@ namespace ElectionResults.WebApi
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
-            app.UseMvc(routes =>
+            app.UseRouting();
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller}/{action=Index}/{id?}");
+                endpoints.MapControllers();
             });
 
             app.UseSpa(spa =>

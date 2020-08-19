@@ -111,8 +111,8 @@ namespace ElectionResults.Core.Storage
             var results = GetResults(queryResponse.Items);
             var latest = results.Where(r => r.Type == type).OrderByDescending(r => r.Timestamp).FirstOrDefault();
             if (latest != null)
-                return Result.Ok(latest);
-            return Result.Ok(new ElectionStatistics
+                return Result.Success(latest);
+            return Result.Success(new ElectionStatistics
             {
                 StatisticsJson = ""
             });

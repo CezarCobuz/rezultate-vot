@@ -37,7 +37,7 @@ namespace ElectionResults.Core.Repositories
                 };
                 var response = await _amazonS3.PutBucketAsync(putBucketRequest);
 
-                return Result.Ok(new CreateBucketResponse
+                return Result.Success(new CreateBucketResponse
                 {
                     BucketName = bucketName,
                     RequestId = response.ResponseMetadata.RequestId
