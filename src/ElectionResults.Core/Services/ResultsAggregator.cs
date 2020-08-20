@@ -75,10 +75,10 @@ namespace ElectionResults.Core.Services
                 if (string.IsNullOrWhiteSpace(resultsQuery.Source))
                 {
                     var data = await CombineAllSources(resultsQuery);
-                    if (data.Candidates == null)
+                    if (data?.Candidates == null)
                     {
                         Log.LogWarning($"No data found for {resultsQuery}");
-                        return Result.Success(CreateLiveResultsResponse(data));
+                        return Result.Failure<LiveResultsResponse>($"No data found for {resultsQuery}");
                     }
                     return Result.Success(CreateLiveResultsResponse(data));
                 }

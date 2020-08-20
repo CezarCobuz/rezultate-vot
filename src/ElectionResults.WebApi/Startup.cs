@@ -12,6 +12,7 @@ using ElectionResults.Core.Services.CsvDownload;
 using ElectionResults.Core.Services.CsvProcessing;
 using ElectionResults.Core.Storage;
 using ElectionResults.WebApi.Scheduler;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +22,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
@@ -52,6 +54,7 @@ namespace ElectionResults.WebApi
             services.AddTransient<IFileProcessor, FileProcessor>();
             services.AddTransient<IStatisticsAggregator, StatisticsAggregator>();
             services.AddTransient<IBucketRepository, BucketRepository>();
+            services.AddTransient<IAdminRepository, AdminRepository>();
             services.AddTransient<IFileRepository, FileRepository>();
             services.AddTransient<IVoterTurnoutAggregator, VoterTurnoutAggregator>();
             services.AddSwaggerGen(c =>
@@ -98,7 +101,14 @@ namespace ElectionResults.WebApi
                     Region = RegionEndpoint.EUCentral1
                 });
             }
+
+            services.AddDbContext<ApplicationDbContext>(options =>
+            {
+                options.UseMySQL(Configuration.GetConnectionString("DefaultConnection"));
+            });
             
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(o => o.LoginPath = "/web/login");
             services.AddLazyCache();
             services.AddSingleton<IHostedService, ScheduleTask>();
             services.AddSpaStaticFiles(configuration =>
@@ -127,10 +137,11 @@ namespace ElectionResults.WebApi
 
         private bool InDocker { get { return Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true"; } }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, ApplicationDbContext context)
         {
-            app.UseHsts();
             Log.SetLogger(loggerFactory.CreateLogger<Startup>());
+            MigrateDatabase(context);
+            app.UseHsts();
             app.UseSwagger();
 
             app.UseSwaggerUI(c =>
@@ -157,11 +168,14 @@ namespace ElectionResults.WebApi
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
             app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller}/{action=Index}/{id?}");
             });
-
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "ClientApp";
@@ -170,7 +184,10 @@ namespace ElectionResults.WebApi
                     try
                     {
                         if (!InDocker) // and only when started from the dotnet CLI or Visual Studio
+                        {
+                            spa.Options.StartupTimeout = TimeSpan.FromSeconds(120); 
                             spa.UseReactDevelopmentServer(npmScript: "start");
+                        }
                     }
                     catch
                     {
@@ -178,6 +195,18 @@ namespace ElectionResults.WebApi
                     }
                 }
             });
+        }
+
+        private static void MigrateDatabase(ApplicationDbContext context)
+        {
+            try
+            {
+                context.Database.Migrate();
+            }
+            catch (Exception e)
+            {
+                Log.LogError(e);
+            }
         }
     }
 }

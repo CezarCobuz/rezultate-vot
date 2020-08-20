@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -55,14 +56,22 @@ namespace ElectionResults.Core.Infrastructure
 
         public async Task<Result<int>> GetInterval()
         {
-            var getParameterRequest = new GetParameterRequest
+            try
             {
-                Name = $"/{_parameterStoreName}/settings/intervalInSeconds",
-            };
-            var response = await _amazonSettingsClient.GetParameterAsync(getParameterRequest);
-            if (response.HttpStatusCode == HttpStatusCode.OK)
-                return Result.Success(int.Parse(response.Parameter.Value));
-            return Result.Failure<int>("Couldn't retrieve the job timer");
+                var getParameterRequest = new GetParameterRequest
+                {
+                    Name = $"/{_parameterStoreName}/settings/intervalInSeconds",
+                };
+                var response = await _amazonSettingsClient.GetParameterAsync(getParameterRequest);
+                if (response.HttpStatusCode == HttpStatusCode.OK)
+                    return Result.Success(int.Parse(response.Parameter.Value));
+                return Result.Failure<int>("Couldn't retrieve the job timer");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return Result.Failure<int>(e.Message);
+            }
         }
 
         public async Task<Result> UpdateElectionConfig(List<Election> elections)

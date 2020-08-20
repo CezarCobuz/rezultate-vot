@@ -4,7 +4,7 @@ import { Label, Input } from 'reactstrap';
 import { getElectionConfigUrl } from '../../services/apiService';
 
 const AdminPanel = () => {
-  // const API_URL = '/api/settings/election-config';
+  // const API_URL = '/api/admin/election-config';
   const [config, setConfig] = useState({ Files: [], Candidates: [] });
 
   useEffect(() => {
@@ -19,7 +19,7 @@ const AdminPanel = () => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(config),
+      body: JSON.stringify(config)
     });
   }
 

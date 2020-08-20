@@ -4,6 +4,7 @@ import EmailInput from "../Form/EmailInput";
 import PasswordInput from "../Form/PasswordInput";
 import { useLogin } from "../../hooks/useLogin";
 import { Button, Col, Form, Spinner } from "reactstrap";
+import { authentication } from "../../services/apiService";
 
 import style from './Login.module.css';
 
@@ -17,17 +18,38 @@ const Login = () => {
   );
   const { isLoading, response } = useLogin(state.login);
   const onSubmit = data => {
+    console.log('data', data);
     setState(
       {
         login: true
-      }
-    );
-  };
+        
+      }); 
+      authentication.login( data.email, data.password)
+      .then(response => {
 
-  if (response) {
-    // TODO do some cookie/header persistence and then redirecting here
-    console.log('res', response);
-  }
+          console.log(response);
+          if (response) {
+              // TODO do some cookie/header persistence and then redirecting here
+              console.log('res successful ', response);
+          }
+        setState(
+          {
+            ...state,
+            isLoading: false,
+            response
+          }
+        );
+      })
+      .catch(error => {
+        setState(
+          {
+            ...state,
+            isLoading: false,
+            error
+          }
+        );
+      });
+  };
 
   return (
     <Col md={ { size: 10, offset: 1 } } className={ style.formWrapper }>

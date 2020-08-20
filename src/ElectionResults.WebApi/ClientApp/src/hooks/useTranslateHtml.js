@@ -13,7 +13,7 @@ export function useTranslateHtml(namespace, key) {
   const translate = useCallback(() => {
 
     return renderHtml(html);
-  }, [html])
+  }, [html]);
 
   return { translate };
 }

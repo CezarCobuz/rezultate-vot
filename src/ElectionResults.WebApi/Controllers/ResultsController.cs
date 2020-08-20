@@ -41,7 +41,7 @@ namespace ElectionResults.WebApi.Controllers
                 {
                     _appCache.Remove(key);
                     Log.LogWarning(result.Error);
-                    return BadRequest(result.Error);
+                    return BadRequest(result);
                 }
                 var voteCountStatisticsResult = await _appCache.GetOrAddAsync(
                     Consts.ResultsCountKey + electionId, () => _resultsAggregator.GetVoteCountStatistics(electionId),

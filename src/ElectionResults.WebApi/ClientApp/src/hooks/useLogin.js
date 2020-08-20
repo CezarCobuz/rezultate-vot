@@ -1,4 +1,4 @@
-import { authentication } from "../services/apiService";
+
 import { useEffect, useState } from "react";
 
 /**
@@ -10,7 +10,7 @@ export const useLogin = (deferred) => {
     {
       isLoading: false,
       response: null,
-      error: null,
+      error: null
     }
   );
 
@@ -18,27 +18,8 @@ export const useLogin = (deferred) => {
     if (deferred) {
       setState({
         ...state,
-        isLoading: true,
+        isLoading: true
       });
-      authentication.login()
-        .then(response => {
-          setState(
-            {
-              ...state,
-              isLoading: false,
-              response
-            }
-          );
-        })
-        .catch(error => {
-          setState(
-            {
-              ...state,
-              isLoading: false,
-              error
-            }
-          );
-        })
     }
 
   }, [deferred]);

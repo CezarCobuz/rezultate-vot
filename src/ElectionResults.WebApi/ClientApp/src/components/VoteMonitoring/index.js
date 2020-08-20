@@ -17,9 +17,9 @@ export const VoteMonitoring = () => {
         const fetchServerData = async () => {
             try {
                 console.log("Loaded vote monitoring for " + ElectionPicker.getSelection());
-                fetch(getVoteMonitoringUrl(ElectionPicker.getSelection()))
+                /*fetch(getVoteMonitoringUrl(ElectionPicker.getSelection()))
                     .then(data => data.json())
-                    .then(data => setVoteMonitoringData(data.statistics));
+                    .then(data => setVoteMonitoringData(data.statistics));*/
             } catch (e) {
                 console.log(e);
             }
