@@ -6,6 +6,7 @@ import code4RoGrey from '../images/code4RoGrey.svg';
 import ElectionPicker from '../services/electionPicker';
 import { getVoterTurnoutUrl } from '../services/apiService';
 import { useTranslation } from "react-i18next";
+import { StackedBar } from "./VoteResults/StackedBar/StackedBar";
 
 const Line = ({ percent }) => (
     <div className="chart-line" style={{ top: `calc(100% - ${percent}%)` }}>
@@ -51,11 +52,11 @@ const LegendDot = ({ color, text }) => (
 
 const dotFormat = value => `${value}`.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
 
-export function ElectionChart() {
+export const ElectionChart = () => {
     const MAX_MOBILE_WIDTH = 575;
     const windowSize = useWindowSize();
     const [data, setData] = React.useState(null);
-
+    
     const { t } = useTranslation();
 
     const calcPercentage = val => ((val * 100) / data.enlistedVoters).toFixed(2);
@@ -100,13 +101,14 @@ export function ElectionChart() {
 
     if (!data) {
         return null;
-    } else {
+    } 
         return (
             <div className={'full-width-container'}>
                 <div className="border-radius">
                     <div className={"vote-monitoring-title-presence"}>
                         <h1>
                             {
+                                // TODO: Investigate this, it is collapsing with other components
                                 t('voter_turnout')
                             }
                         </h1>
@@ -187,10 +189,12 @@ export function ElectionChart() {
                             </Container>
                         </div>
                     </div>
+
+                    <StackedBar />
+
                     <p className="becro">{ t('data_source') } <a href="https://prezenta.bec.ro" target="_blank" rel="noopener noreferrer">prezenta.bec.ro</a></p>
                 </div>
 
             </div>
         );
-    }
 }

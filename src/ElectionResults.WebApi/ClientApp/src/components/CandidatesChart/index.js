@@ -12,6 +12,7 @@ let totalCountedVotes = 0;
 let percentageCounted = 0;
 let canceledVotes = 0;
 let queryUrl = '';
+
 export const ChartContainer = () => {
     const [showAll, toggleShowAll] = React.useState(false);
     const [candidates, setCandidates] = React.useState(null);
@@ -22,6 +23,7 @@ export const ChartContainer = () => {
     const { t } = useTranslation();
     React.useEffect(() => {
 
+        // TODO: Move this in a separate folder and just call here for clearer code
         const fetchServerData = async () => {
             try {
                 if (!queryUrl) {
